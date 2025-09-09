@@ -48,6 +48,9 @@
         <button class="btn btn-success btn-login" onclick="window.location.href='times/read.php'">
             Times
         </button>
+        <button class="btn btn-success btn-login" onclick="window.location.href='../login.php?logout=1'">
+            Logout
+        </button>
     </div>
 </div>
 
