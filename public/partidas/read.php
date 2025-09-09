@@ -2,6 +2,12 @@
 include('../../includes/db.php');
 include('../../includes/header.php');
 
+session_start();
+if (!isset($_SESSION["user_pk"])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 // Filtros
 $timeFiltro = $_GET['time'] ?? '';
 $dataInicio = $_GET['data_inicio'] ?? '';

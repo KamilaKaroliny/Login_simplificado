@@ -2,6 +2,12 @@
 include('../../includes/db.php');
 include('../../includes/header.php');
 
+session_start();
+if (!isset($_SESSION["user_pk"])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 // Busca todos os times para preencher os selects
 $times = $mysqli->query("SELECT * FROM times ORDER BY nome")->fetch_all(MYSQLI_ASSOC);
 

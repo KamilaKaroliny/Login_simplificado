@@ -1,6 +1,13 @@
 <?php 
 include('../../includes/db.php');
 include('../../includes/header.php'); 
+
+session_start();
+if (!isset($_SESSION["user_pk"])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 ?>
 
 <div class="container mt-4">

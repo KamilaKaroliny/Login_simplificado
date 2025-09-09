@@ -2,6 +2,12 @@
 include('../../includes/db.php');
 include('../../includes/header.php');
 
+session_start();
+if (!isset($_SESSION["user_pk"])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 // Verifica se veio ID pela URL
 if (!isset($_GET['id'])) {
     echo "<p>ID da partida não informado.</p>";

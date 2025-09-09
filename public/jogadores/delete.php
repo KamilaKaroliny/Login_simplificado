@@ -2,6 +2,12 @@
 include('../../includes/db.php');
 include('../../includes/header.php');
 
+session_start();
+if (!isset($_SESSION["user_pk"])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 $id = $_GET['id'];
 
 $sql = "DELETE FROM jogadores WHERE id=$id";
