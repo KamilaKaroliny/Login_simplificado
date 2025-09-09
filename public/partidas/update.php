@@ -13,7 +13,7 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 
 // Busca a partida no banco
-$stmt = $conn->prepare("SELECT * FROM partidas WHERE id = ?");
+$stmt = $mysqli->prepare("SELECT * FROM partidas WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -26,7 +26,7 @@ if (!$partida) {
 }
 
 // Busca todos os times para preencher os selects
-$times = $conn->query("SELECT * FROM times")->fetch_all(MYSQLI_ASSOC);
+$times = $mysqli->query("SELECT * FROM times")->fetch_all(MYSQLI_ASSOC);
 
 // Se enviou o formulário (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($time_casa_id == $time_fora_id) {
         $erro = "O time mandante não pode ser igual ao time visitante!";
     } else {
-        $stmt = $conn->prepare("UPDATE partidas 
+        $stmt = $mysqli->prepare("UPDATE partidas 
             SET time_casa_id=?, time_fora_id=?, data_jogo=?, gols_casa=?, gols_fora=? 
             WHERE id=?");
         $stmt->bind_param("iisiii", $time_casa_id, $time_fora_id, $data_jogo, $gols_casa, $gols_fora, $id);

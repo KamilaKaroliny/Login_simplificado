@@ -4,7 +4,7 @@ include('../../includes/db.php');
 $id = $_GET['id'];
 
 $sql = "DELETE FROM times WHERE id=$id";
-if ($conn->query($sql)) {
+if ($mysqli->query($sql)) {
     header("Location: read.php");
     exit;
 } else {

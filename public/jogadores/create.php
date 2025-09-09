@@ -32,7 +32,7 @@ include('../../includes/header.php');
             <label for="time_id" class="form-label">Time</label>
             <select name="time_id" class="form-select" required>
                 <?php
-                $result = $conn->query("SELECT id, nome FROM times");
+                $result = $mysqli->query("SELECT id, nome FROM times");
                 while($row = $result->fetch_assoc()) {
                     echo "<option value='{$row['id']}'>{$row['nome']}</option>";
                 }
@@ -57,11 +57,11 @@ if (isset($_POST['salvar'])) {
     $sql = "INSERT INTO jogadores (nome, posicao, numero_camisa, time_id)
             VALUES ('$nome', '$posicao', $numero_camisa, $time_id)";
 
-    if ($conn->query($sql)) {
+    if ($mysqli->query($sql)) {
         header("Location: read.php");
         exit;
     } else {
-        echo "<div class='alert alert-danger mt-3'>Erro: " . $conn->error . "</div>";
+        echo "<div class='alert alert-danger mt-3'>Erro: " . $mysqli->error . "</div>";
     }
 }
 ?>

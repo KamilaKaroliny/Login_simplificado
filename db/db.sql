@@ -1,6 +1,12 @@
 CREATE DATABASE futebol_db;
 USE futebol_db;
 
+CREATE TABLE usuarios (
+    pk INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(120) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE times (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -26,6 +32,9 @@ CREATE TABLE partidas (
 );
 
 -- dados inseridos
+INSERT INTO usuarios (username, senha) VALUES 
+('admin', '123');
+
 INSERT INTO times (nome, cidade) VALUES
 ('Botafogo', 'Rio de Janeiro'),
 ('Palmeiras', 'São Paulo'),

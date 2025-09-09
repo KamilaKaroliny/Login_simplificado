@@ -3,7 +3,7 @@ include('../../includes/db.php');
 include('../../includes/header.php');
 
 // Busca todos os times para preencher os selects
-$times = $conn->query("SELECT * FROM times ORDER BY nome")->fetch_all(MYSQLI_ASSOC);
+$times = $mysqli->query("SELECT * FROM times ORDER BY nome")->fetch_all(MYSQLI_ASSOC);
 
 $erro = "";
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($time_casa_id == $time_fora_id) {
         $erro = "O time mandante não pode ser igual ao time visitante!";
     } else {
-        $stmt = $conn->prepare("INSERT INTO partidas 
+        $stmt = $mysqli->prepare("INSERT INTO partidas 
             (time_casa_id, time_fora_id, data_jogo, gols_casa, gols_fora) 
             VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("iisii", $time_casa_id, $time_fora_id, $data_jogo, $gols_casa, $gols_fora);

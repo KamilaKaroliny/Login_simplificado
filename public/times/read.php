@@ -30,7 +30,7 @@ if ($cidadeFiltro) {
     $typesCount .= "s";
 }
 
-$stmtCount = $conn->prepare($sqlCount);
+$stmtCount = $mysqli->prepare($sqlCount);
 if (!empty($paramsCount)) {
     $stmtCount->bind_param($typesCount, ...$paramsCount);
 }
@@ -63,7 +63,7 @@ $params[] = $offset;
 $params[] = $itens_por_pagina;
 $types .= "ii";
 
-$stmt = $conn->prepare($sql);
+$stmt = $mysqli->prepare($sql);
 $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();

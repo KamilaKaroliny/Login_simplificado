@@ -31,11 +31,11 @@ if (isset($_POST['salvar'])) {
 
     $sql = "INSERT INTO times (nome, cidade) VALUES ('$nome', '$cidade')";
 
-    if ($conn->query($sql)) {
+    if ($mysqli->query($sql)) {
         header("Location: read.php");
         exit;
     } else {
-        echo "<div class='alert alert-danger mt-3'>Erro: " . $conn->error . "</div>";
+        echo "<div class='alert alert-danger mt-3'>Erro: " . $mysqli->error . "</div>";
     }
 }
 ?>

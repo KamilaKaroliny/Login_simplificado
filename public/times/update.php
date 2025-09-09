@@ -3,7 +3,7 @@ include('../../includes/db.php');
 include('../../includes/header.php'); 
 
 $id = $_GET['id'];
-$dados = $conn->query("SELECT * FROM times WHERE id=$id")->fetch_assoc();
+$dados = $mysqli->query("SELECT * FROM times WHERE id=$id")->fetch_assoc();
 ?>
 
 <div class="container mt-4">
@@ -34,11 +34,11 @@ if (isset($_POST['atualizar'])) {
 
     $sql = "UPDATE times SET nome='$nome', cidade='$cidade' WHERE id=$id";
 
-    if ($conn->query($sql)) {
+    if ($mysqli->query($sql)) {
         header("Location: read.php");
         exit;
     } else {
-        echo "<div class='alert alert-danger mt-3'>Erro: " . $conn->error . "</div>";
+        echo "<div class='alert alert-danger mt-3'>Erro: " . $mysqli->error . "</div>";
     }
 }
 ?>

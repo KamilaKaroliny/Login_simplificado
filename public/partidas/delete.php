@@ -11,7 +11,7 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 
 // Busca a partida no banco
-$stmt = $conn->prepare("SELECT p.id, p.data_jogo, t1.nome AS time_casa, t2.nome AS time_fora 
+$stmt = $mysqli->prepare("SELECT p.id, p.data_jogo, t1.nome AS time_casa, t2.nome AS time_fora 
                         FROM partidas p
                         JOIN times t1 ON p.time_casa_id = t1.id
                         JOIN times t2 ON p.time_fora_id = t2.id
@@ -28,7 +28,7 @@ if (!$partida) {
 
 // Se enviou o formulário para excluir
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $conn->prepare("DELETE FROM partidas WHERE id = ?");
+    $stmt = $mysqli->prepare("DELETE FROM partidas WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     header("Location: read.php");
