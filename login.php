@@ -13,11 +13,11 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-// 3) Login
+// 3) Login e cadastro
 $msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Qual ação foi enviada? ("login" ou "register")
+   
     $action = $_POST["action"] ?? "";
     $user = trim($_POST["username"] ?? "");
     $pass = trim($_POST["password"] ?? "");
@@ -33,17 +33,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
 
         // verifica se encontrou usuário e se a senha bate
-        if ($dados && password_verify($pass, $dados["senha"])) {
+        if ($dados && $pass === $dados["senha"]) {
             $_SESSION["user_pk"] = $dados["pk"];
             $_SESSION["username"] = $dados["username"];
-            header("Location: ./public/telaInicial.php"); // envia para dashboard
+            header("Location: ./public/telaInicial.php"); // envia para a tela inicial
             exit;
         } else {
             $msg = "Usuário ou senha incorretos!";
         }
 
     // CADASTRO
-    } elseif ($action === "register") {
+    } elseif ($action === "cadastrar") {
         if (!empty($user) && !empty($pass)) {
             // verificar se já existe usuário com esse nome
             $stmt = $mysqli->prepare("SELECT pk FROM usuarios WHERE username=?");
@@ -56,12 +56,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 $stmt->close();
 
-                // gera hash da senha para armazenar com segurança
-                $senhaHash = password_hash($pass, PASSWORD_DEFAULT);
-
                 // insere novo usuário no banco
+                $senha = $pass; // senha real do usuário
                 $stmt = $mysqli->prepare("INSERT INTO usuarios (username, senha) VALUES (?, ?)");
-                $stmt->bind_param("ss", $user, $senhaHash);
+                $stmt->bind_param("ss", $user, $senha);
 
                 if ($stmt->execute()) {
                     $msg = "Usuário cadastrado com sucesso! Agora faça login.";
@@ -71,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             $stmt->close();
         } else {
-            $msg = "Preencha todos os campos!";
+          $msg = "Preencha todos os campos!";
         }
     }
 }
@@ -91,6 +89,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 <?php else: ?>
+  
+  <div class="card">
+    <h3>Criar conta</h3>
+    <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
+    <form method="post">
+      <input type="hidden" name="action" value="cadastrar">
+      <input type="text" name="username" placeholder="Novo usuário" required> <br><br>
+      <input type="password" name="password" placeholder="Nova senha" required> <br><br>
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
+
   <div class="card">
     <h3>Login</h3>
     <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
@@ -103,16 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <p><small>Dica: admin / 123 </small></p>
   </div>
 
-  <div class="card">
-    <h3>Criar conta</h3>
-    <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
-    <form method="post">
-      <input type="hidden" name="action" value="register">
-      <input type="text" name="username" placeholder="Novo usuário" required> <br><br>
-      <input type="password" name="password" placeholder="Nova senha" required> <br><br>
-      <button type="submit">Cadastrar</button>
-    </form>
-  </div>
 <?php endif; ?>
 
 </body>
