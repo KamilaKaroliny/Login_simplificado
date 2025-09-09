@@ -15,24 +15,64 @@ if (isset($_GET['logout'])) {
 
 // 3) Login
 $msg = "";
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $user = $_POST["username"] ?? "";
-    $pass = $_POST["password"] ?? "";
+    // Qual ação foi enviada? ("login" ou "register")
+    $action = $_POST["action"] ?? "";
+    $user = trim($_POST["username"] ?? "");
+    $pass = trim($_POST["password"] ?? "");
 
-    $stmt = $mysqli->prepare("SELECT pk, username, senha FROM usuarios WHERE username=? AND senha=?");
-    $stmt->bind_param("ss", $user, $pass);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $dados = $result->fetch_assoc();
-    $stmt->close();
+    // LOGIN
+    if ($action === "login") {
+        // busca usuário no banco
+        $stmt = $mysqli->prepare("SELECT pk, username, senha FROM usuarios WHERE username=?");
+        $stmt->bind_param("s", $user);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $dados = $result->fetch_assoc();
+        $stmt->close();
 
-    if ($dados) {
-        $_SESSION["user_pk"] = $dados["pk"];
-        $_SESSION["username"] = $dados["username"];
-        header("Location: login.php");
-        exit;
-    } else {
-        $msg = "Usuário ou senha incorretos!";
+        // verifica se encontrou usuário e se a senha bate
+        if ($dados && password_verify($pass, $dados["senha"])) {
+            $_SESSION["user_pk"] = $dados["pk"];
+            $_SESSION["username"] = $dados["username"];
+            header("Location: ./public/telaInicial.php"); // envia para dashboard
+            exit;
+        } else {
+            $msg = "Usuário ou senha incorretos!";
+        }
+
+    // CADASTRO
+    } elseif ($action === "register") {
+        if (!empty($user) && !empty($pass)) {
+            // verificar se já existe usuário com esse nome
+            $stmt = $mysqli->prepare("SELECT pk FROM usuarios WHERE username=?");
+            $stmt->bind_param("s", $user);
+            $stmt->execute();
+            $stmt->store_result();
+
+            if ($stmt->num_rows > 0) {
+                $msg = "Usuário já existe!";
+            } else {
+                $stmt->close();
+
+                // gera hash da senha para armazenar com segurança
+                $senhaHash = password_hash($pass, PASSWORD_DEFAULT);
+
+                // insere novo usuário no banco
+                $stmt = $mysqli->prepare("INSERT INTO usuarios (username, senha) VALUES (?, ?)");
+                $stmt->bind_param("ss", $user, $senhaHash);
+
+                if ($stmt->execute()) {
+                    $msg = "Usuário cadastrado com sucesso! Agora faça login.";
+                } else {
+                    $msg = "Erro ao cadastrar: " . $stmt->error;
+                }
+            }
+            $stmt->close();
+        } else {
+            $msg = "Preencha todos os campos!";
+        }
     }
 }
 ?>
@@ -55,11 +95,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <h3>Login</h3>
     <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
     <form method="post">
-      <input type="text" name="username" placeholder="Usuário" required> <br> <br>
-      <input type="password" name="password" placeholder="Senha" required> <br> <br>
+      <input type="hidden" name="action" value="login">
+      <input type="text" name="username" placeholder="Usuário" required> <br><br>
+      <input type="password" name="password" placeholder="Senha" required> <br><br>
       <button type="submit">Entrar</button>
     </form>
     <p><small>Dica: admin / 123 </small></p>
+  </div>
+
+  <div class="card">
+    <h3>Criar conta</h3>
+    <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
+    <form method="post">
+      <input type="hidden" name="action" value="register">
+      <input type="text" name="username" placeholder="Novo usuário" required> <br><br>
+      <input type="password" name="password" placeholder="Nova senha" required> <br><br>
+      <button type="submit">Cadastrar</button>
+    </form>
   </div>
 <?php endif; ?>
 
