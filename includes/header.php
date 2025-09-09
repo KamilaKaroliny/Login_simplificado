@@ -16,7 +16,7 @@
                 <li class="nav-item"><a class="nav-link" href="../../public/times/read.php">Times</a></li>
                 <li class="nav-item"><a class="nav-link" href="../../public/jogadores/read.php">Jogadores</a></li>
                 <li class="nav-item"><a class="nav-link" href="../../public/partidas/read.php">Partidas</a></li>
-                <li class="nav-item"><a class="nav-link" href="../../public/index.php">Página Inicial</a></li>
+                <li class="nav-item"><a class="nav-link" href="../../public/telaInicial.php">Página Inicial</a></li>
             </ul>
         </div>
     </div>

@@ -42,16 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
 <meta charset="utf-8">
 <title>Login Simples</title>
-<link rel="stylesheet" href="../style/style.css">
+<link rel="stylesheet" href="./style/style.css">
 </head>
 <body>
 
-<?php if (!empty($_SESSION["user_pk"])): ?>
-  <div class="card">
-    <h3>Bem-vindo, <?= $_SESSION["username"] ?>!</h3>
-    <p>Sessão ativa.</p>
-    <p><a href="?logout=1">Sair</a></p>
-  </div>
+<?php if (!empty($_SESSION["user_pk"])):
+   header("Location: ./public/telaInicial.php");
+?>
 
 <?php else: ?>
   <div class="card">
