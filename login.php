@@ -13,7 +13,7 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-// 3) Login e cadastro
+// 3) Login
 $msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -41,37 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             $msg = "Usuário ou senha incorretos!";
         }
-
-    // CADASTRO
-    } elseif ($action === "cadastrar") {
-        if (!empty($user) && !empty($pass)) {
-            // verificar se já existe usuário com esse nome
-            $stmt = $mysqli->prepare("SELECT pk FROM usuarios WHERE username=?");
-            $stmt->bind_param("s", $user);
-            $stmt->execute();
-            $stmt->store_result();
-
-            if ($stmt->num_rows > 0) {
-                $msg = "Usuário já existe!";
-            } else {
-                $stmt->close();
-
-                // insere novo usuário no banco
-                $senha = $pass; // senha real do usuário
-                $stmt = $mysqli->prepare("INSERT INTO usuarios (username, senha) VALUES (?, ?)");
-                $stmt->bind_param("ss", $user, $senha);
-
-                if ($stmt->execute()) {
-                    $msg = "Usuário cadastrado com sucesso! Agora faça login.";
-                } else {
-                    $msg = "Erro ao cadastrar: " . $stmt->error;
-                }
-            }
-            $stmt->close();
-        } else {
-          $msg = "Preencha todos os campos!";
-        }
-    }
+     }
 }
 ?>
 
@@ -89,17 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 <?php else: ?>
-  
-  <div class="card">
-    <h3>Criar conta</h3>
-    <?php if ($msg): ?><p class="msg"><?= $msg ?></p><?php endif; ?>
-    <form method="post">
-      <input type="hidden" name="action" value="cadastrar">
-      <input type="text" name="username" placeholder="Novo usuário" required> <br><br>
-      <input type="password" name="password" placeholder="Nova senha" required> <br><br>
-      <button type="submit">Cadastrar</button>
-    </form>
-  </div>
 
   <div class="card">
     <h3>Login</h3>
@@ -110,6 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <input type="password" name="password" placeholder="Senha" required> <br><br>
       <button type="submit">Entrar</button>
     </form>
+
+    <div class="flex">
+      <p><small>Ainda não tem conta?</small></p>
+      <a href="./public/cadastro.php" class="left" >Cadastre-se</a>
+    </div>
+
     <p><small>Dica: admin / 123 </small></p>
   </div>
 

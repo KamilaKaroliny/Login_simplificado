@@ -18,9 +18,8 @@ $pagina = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
 $itens_por_pagina = 10;
 $offset = ($pagina - 1) * $itens_por_pagina;
 
-/* =======================================================
-   CONTAGEM DE REGISTROS (com filtros aplicados)
-======================================================= */
+/* CONTAGEM DE REGISTROS (com filtros aplicados)*/
+
 $sqlCount = "SELECT COUNT(*) as total 
              FROM jogadores j
              LEFT JOIN times t ON j.time_id = t.id

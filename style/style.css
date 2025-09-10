@@ -29,3 +29,12 @@ button {
 .msg {
     color: red
 }
+
+.flex{
+    display: flex;
+    align-items: center;
+}
+
+.left{
+    padding-left: 10px;
+}
